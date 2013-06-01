@@ -55,4 +55,4 @@ How this works is that when the login provider recognizes a parameter with the '
 * github_provider_client_id=2f292c6912e77
 * github_provider_secret=e72e16c7e42f292c6912e7710c838347ae178b4a
 
-*NOTE* that the value of the '_provider'-parameter is will correspond to the ${provider} parameter in the Connection-PARAMETER section..
+*NOTE* that the VALUE (ie. 'github') of the '_provider'-parameter is will correspond to the ${provider} parameter in the Connection-PARAMETER section..

@@ -83,8 +83,10 @@ public class OauthLoginModule implements LoginModule {
 
 				if (tokenUrl == null) {
 					logger.warn("No 'token url' option set for provider '" + option + "'.");
-				} else if (userUrl == null) {
+				
+				}else if (userUrl == null) {
 					logger.warn("No 'user url' option set for provider '" + option + "'.");
+				
 				} else if (client_id == null) {
 					logger.warn("No 'client_id' option set for provider '" + option + "'.");
 				} else if (secret == null) {
@@ -122,9 +124,21 @@ public class OauthLoginModule implements LoginModule {
 			logger.error("Missing option: db_driver");
 		} else if (query_get_user == null) {
 			logger.error("Missing option: query_get_user");
+		} else if (!query_get_user.toString().contains("${provider}")) {
+			logger.error("Missing option: query_get_user");
+		} else if (!query_get_user.toString().contains("${provider_user_id}")) {
+			logger.error("Missing option: query_get_user");
 		} else if (query_add_user == null) {
 			logger.error("Missing option: query_add_user");
+		} else if (!query_add_user.toString().contains("${provider}")) {
+			logger.error("Missing option: query_add_user");
+		} else if (!query_add_user.toString().contains("${provider_user_id}")) {
+			logger.error("Missing option: query_add_user");
 		} else if (query_get_groups == null) {
+			logger.error("Missing option: query_get_groups");
+		} else if (!query_get_groups.toString().contains("${provider}")) {
+			logger.error("Missing option: query_get_groups");
+		} else if (!query_get_groups.toString().contains("${provider_user_id}")) {
 			logger.error("Missing option: query_get_groups");
 		} else if (providerMap.isEmpty()) {
 			logger.error("No providers set up with sufficient parameter settings");
@@ -153,8 +167,8 @@ public class OauthLoginModule implements LoginModule {
 		}
 		logger.debug("login module called");
 		Callback[] callbacks = new Callback[2];
-		callbacks[0] = new PasswordCallback("Code: ", true);
-		callbacks[1] = new NameCallback("State: ");
+		callbacks[0] = new NameCallback("State: ");
+		callbacks[1] = new PasswordCallback("Code: ", true);
 		try {
 			callbackHandler.handle(callbacks);
 		} catch (IOException ex) {
@@ -166,15 +180,8 @@ public class OauthLoginModule implements LoginModule {
 			logger.debug(ex.getStackTrace().toString());
 			return false;
 		}
-		String code;
-		try {
-			code = new String(((PasswordCallback) callbacks[0]).getPassword());
-		} catch (NullPointerException npe) {
-			String error = "code is not provided";
-			logger.debug(error);
-			throw new FailedLoginException(error);
-		}
-		String state = ((NameCallback) callbacks[1]).getName();
+		
+		String state = ((NameCallback) callbacks[0]).getName();
 		if (state == null) {
 			String error = "OAuth provided not set";
 			logger.debug(error);
@@ -184,6 +191,15 @@ public class OauthLoginModule implements LoginModule {
 			logger.debug(error);
 			throw new FailedLoginException(error);
 		}
+		String code;
+		try {
+			code = new String(((PasswordCallback) callbacks[1]).getPassword());
+		} catch (NullPointerException npe) {
+			String error = "code is not provided";
+			logger.debug(error);
+			throw new FailedLoginException(error);
+		}
+		
 		sanityCheckUserInput(code, state);
 		String accessToken = getAccessToken(state, code);
 		String userId = getUserId(state, accessToken);
