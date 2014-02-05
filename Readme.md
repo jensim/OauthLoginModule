@@ -1,12 +1,11 @@
 DEPRECATED
+====
 
-===============================
-== About this login provider ==
-===============================
+About this login provider 
+----
 
-========================
-== Expected knowledge ==
-========================
+Expected knowledge
+----
 * Jave SE, and a tad of EE
 * Advanced OAuth client-server design pattern :: http://www.cloudidentity.com/blog/2013/01/02/oauth-2-0-and-sign-in-4/
 * Module Installtion 
@@ -14,9 +13,8 @@ DEPRECATED
 * Security domain configuration
 
 
-==================================
-== MODULE Connection PARAMETERS ==
-==================================
+MODULE Connection PARAMETERS
+----
 * db_url=jdbc:postgresql://127.0.0.1:5432/beardata
 * db_user=postgres
 * db_pass=password
@@ -39,9 +37,8 @@ JOIN oauth_provider op ON u.oauth_provider_id = op.id
 WHERE op.name = ${provider} 
 AND u.oauth_provider_user_id = ${provider_user_id}
 
-=============================
-== MODULE OAuth PARAMETERS ==
-=============================
+MODULE OAuth PARAMETERS
+----
 Further more, i've taken the design decision to let the login module detect oauth providers dynamicly as they are added to the configuration.
 How this works is that you add a set of parameters that end with '_provider', one for each oauth provider you want to implement for. For each provider you will need four to five extra parameters, and these are:
 * _token
