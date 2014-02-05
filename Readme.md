@@ -1,5 +1,6 @@
 DEPRECATED
 ====
+*This unit never passed final testing and was rewritten into a application integrated feature of CharacterBuilder*
 
 About this login provider 
 ----
